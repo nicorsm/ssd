@@ -29,9 +29,10 @@ const x_test = tf.tensor([
   [0.9, 0.1, 0.5, 0.1, 0.5, 0.1]
 ])
 
-const modelPath = "localstorage://ssdmodel";
+const modelName = "ssdmodel"
+const modelPath = "localstorage://" + modelName;
 
-if (localStorage.getItem("tensorflowjs_models/ssdmodel/info") != null) {
+if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
   trainOnExistingModel();
 } else {
   setupNewModel();
@@ -48,6 +49,7 @@ function setupNewModel() {
     activation: "sigmoid",
     units: 4
   }
+  
   const config_hidden_2 = {
     units: 4,
     activation: "sigmoid"
@@ -120,6 +122,7 @@ async function reload() {
 
 function clearStorage() {
   localStorage.clear();
+  location.reload();
 }
 
 // Inspired by original code at https://medium.freecodecamp.org/get-to-know-tensorflow-js-in-7-minutes-afcd0dfd3d2f
