@@ -33,12 +33,7 @@ var x_test = tf.tensor([
 const modelName = "ssdmodel"
 const modelPath = "localstorage://" + modelName;
 
-if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
-  trainOnExistingModel();
-} else {
-  //setupNewModel();
-  loadCSV();
-}
+loadCSV();
 
 function setupNewModel() {
 
@@ -51,7 +46,7 @@ function setupNewModel() {
     activation: "sigmoid",
     units: 4
   }
-  
+
   const config_hidden_2 = {
     units: 4,
     activation: "sigmoid"
@@ -134,7 +129,11 @@ function loadCSV() {
       y_train = tf.tensor(ytrain);
       loadLocalCSV("xtest").then(xtest => {
         x_test = tf.tensor(xtest);
-        setupNewModel();
+        if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
+          trainOnExistingModel();
+        } else {
+          setupNewModel();
+        }
       });
     });
   });
@@ -142,53 +141,30 @@ function loadCSV() {
 
 function loadLocalCSV(identifier) {
   return new Promise((resolve, reject) => {
-    var input, file, fr;
-/*
-    if (typeof window.FileReader !== 'function') {
-       alert("The file API isn't supported on this browser yet.");
-       return;
-    }
-    input = "../dataset/" + identifier + ".csv"; // document.getElementById(identifier);
-    if (!input) {
-       alert("Couldn't find the fileinput element.");
-    } else if (!input.files) {
-       alert("This browser doesn't seem to support the `files` property of file inputs.");
-    } else if (!input.files[0]) {
-       alert("Please select a file before clicking 'Load'");
-    } else {
-       file = input.files[0];*/
-
-       file = "../dataset/" + identifier + ".csv";
-       var xhr = new XMLHttpRequest();
-       xhr.open("GET", file, true);
-       xhr.responseType = "blob";
-       xhr.onload = function(e) {
-        if(this.status == 200) {
-          const fileObject = new File([this.response], "temp");
-          fr = new FileReader();
-          fr.onload = function(e) {
-            let lines = fr.result.split("\n");
-            var array = lines.map(x => {
-              return x.split(";").map(str => {
-                return parseFloat(str);
-              });
+    var file, fr;
+    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv";
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", file, true);
+    xhr.responseType = "blob";
+    xhr.onload = function (e) {
+      if (this.status == 200) {
+        const fileObject = new File([this.response], "temp");
+        fr = new FileReader();
+        fr.onload = function (e) {
+          let lines = fr.result.split("\n");
+          var array = lines.map(x => {
+            return x.split(";").map(str => {
+              return parseFloat(str);
             });
-            console.log("Array: " + array);
-            resolve(array);
-          };
-          fr.onerror = reject;
-          fr.readAsDataURL(fileObject);
-        }
-       };
-       xhr.onerror = reject;
-       xhr.send();
-
-
-
-
-
-       //fr.readAsText(file);
-    //}
+          });
+          resolve(array);
+        };
+        fr.onerror = reject;
+        fr.readAsText(fileObject);
+      }
+    };
+    xhr.onerror = reject;
+    xhr.send();
   });
 
 }
