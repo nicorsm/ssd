@@ -8,8 +8,9 @@
     I   
 */
 
+
 //Dummy training data
-const x_train = tf.tensor([
+var x_train = tf.tensor([
   [0.1, 0.5, 0.1, 0.1, 0.5, 0.1],
   [0.9, 0.3, 0.4, 0.1, 0.5, 0.1],
   [0.4, 0.5, 0.5, 0.1, 0.5, 0.1],
@@ -17,7 +18,7 @@ const x_train = tf.tensor([
 ])
 
 //Dummy training labels
-const y_train = tf.tensor([
+var y_train = tf.tensor([
   [0.2, 0.8, 0.1],
   [0.9, 0.1, 0.1],
   [0.4, 0.6, 0.1],
@@ -25,8 +26,8 @@ const y_train = tf.tensor([
 ])
 
 //Dummy testing data
-const x_test = tf.tensor([
-  [0.9, 0.1, 0.5, 0.1, 0.5, 0.1]
+var x_test = tf.tensor([
+  //[0.9, 0.1, 0.5, 0.1, 0.5, 0.1]
 ])
 
 const modelName = "ssdmodel"
@@ -35,7 +36,8 @@ const modelPath = "localstorage://" + modelName;
 if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
   trainOnExistingModel();
 } else {
-  setupNewModel();
+  //setupNewModel();
+  loadCSV();
 }
 
 function setupNewModel() {
@@ -124,5 +126,73 @@ function clearStorage() {
   localStorage.clear();
   location.reload();
 }
+
+function loadCSV() {
+  loadLocalCSV("xtrain").then(xtrain => {
+    x_train = tf.tensor(xtrain);
+    loadLocalCSV("ytrain").then(ytrain => {
+      y_train = tf.tensor(ytrain);
+      loadLocalCSV("xtest").then(xtest => {
+        x_test = tf.tensor(xtest);
+        setupNewModel();
+      });
+    });
+  });
+}
+
+function loadLocalCSV(identifier) {
+  return new Promise((resolve, reject) => {
+    var input, file, fr;
+/*
+    if (typeof window.FileReader !== 'function') {
+       alert("The file API isn't supported on this browser yet.");
+       return;
+    }
+    input = "../dataset/" + identifier + ".csv"; // document.getElementById(identifier);
+    if (!input) {
+       alert("Couldn't find the fileinput element.");
+    } else if (!input.files) {
+       alert("This browser doesn't seem to support the `files` property of file inputs.");
+    } else if (!input.files[0]) {
+       alert("Please select a file before clicking 'Load'");
+    } else {
+       file = input.files[0];*/
+
+       file = "../dataset/" + identifier + ".csv";
+       var xhr = new XMLHttpRequest();
+       xhr.open("GET", file, true);
+       xhr.responseType = "blob";
+       xhr.onload = function(e) {
+        if(this.status == 200) {
+          const fileObject = new File([this.response], "temp");
+          fr = new FileReader();
+          fr.onload = function(e) {
+            let lines = fr.result.split("\n");
+            var array = lines.map(x => {
+              return x.split(";").map(str => {
+                return parseFloat(str);
+              });
+            });
+            console.log("Array: " + array);
+            resolve(array);
+          };
+          fr.onerror = reject;
+          fr.readAsDataURL(fileObject);
+        }
+       };
+       xhr.onerror = reject;
+       xhr.send();
+
+
+
+
+
+       //fr.readAsText(file);
+    //}
+  });
+
+}
+
+
 
 // Inspired by original code at https://medium.freecodecamp.org/get-to-know-tensorflow-js-in-7-minutes-afcd0dfd3d2f

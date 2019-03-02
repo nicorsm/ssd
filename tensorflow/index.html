@@ -1,3 +1,33 @@
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
-<script src="./tf.js"></script>
-<input id="storage" type="button" value="Clear storage" onclick="clearStorage();" />
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+        <script src="./tf.js"></script>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            }
+        </style>
+    </head>
+    <body>
+        <form name="train" method="post" enctype="multipart/form-data">
+            <p>
+            <label for="xtrain">Choose the <b>Training</b> set for <b>X</b>: </label>
+            <input type="file" id="xtrain" name="xtrain" accept="text/csv" value="../dataset/xtrain.csv"/>
+            </p>
+            
+            <p>
+            <label for="ytrain">Choose the <b>Training</b> set for <b>Y</b>: </label>
+            <input type="file" id="ytrain" name="ytrain" accept="text/csv" value="../dataset/ytrain.csv"/>
+            </p>
+            
+            <p>
+            <label for="xtest">Choose the <b>Test</b> set for <b>X</b>: </label>
+            <input type="file" id="xtest" name="xtest" accept="text/csv" value="../dataset/xtest.csv"/>
+            </p>
+            
+            <input id="trainAction" type="button" value="Train with this set" onclick="loadCSV();" />
+            
+            <input id="storage" type="button" value="Clear storage" onclick="clearStorage();" />
+        </form>
+    </body>
+</html>
