@@ -1,34 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Accord.Controls;
+
+using System.Data;
 using Accord.IO;
 using Accord.Math;
-using Accord.Statistics.Distributions.Univariate;
-using Accord.MachineLearning.Bayes;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
 using System.IO;
 using System.Globalization;
 
-namespace AccordNet
+
+namespace accordnet
 {
-    public partial class Form1 : Form
+    class Program
     {
-        public Form1()
+        static void Main(string[] args)
         {
-            InitializeComponent();
+            while(true)
+            {
+                Console.WriteLine("Press ENTER to compute values from the current model.");
+                Console.WriteLine("Press C to clear the current model.");
+                string ln = Console.ReadLine();
+                if(ln.ToLower() == "c")
+                {
+                    File.Delete(modelPath);
+                } else
+                {
+                    compute();
+                }
+            }
         }
+
 
         private const string modelPath = "mlp.accord";
 
-        private double[][] LoadCSV(String name)
+        private static double[][] LoadCSV(String name)
         {
             String completePath = @"\\VBOXSVR\Downloads\ssd\dataset\" + name + ".csv";
             var reader = new StreamReader(completePath);
@@ -44,11 +53,11 @@ namespace AccordNet
             return fileContent.ToArray();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private static void compute()
         {
-            double[][] xTrain = this.LoadCSV("xtrain");
-            double[][] yTrain = this.LoadCSV("ytrain");
-            double[][] xTest = this.LoadCSV("xtest");
+            double[][] xTrain = LoadCSV("xtrain");
+            double[][] yTrain = LoadCSV("ytrain");
+            double[][] xTest = LoadCSV("xtest");
 
             IActivationFunction function = new SigmoidFunction();
 
@@ -56,15 +65,16 @@ namespace AccordNet
             // be creating a network with 5 hidden neurons and 1 output:
             //
             ActivationNetwork network;
-            
-            if(File.Exists(modelPath))
+
+            if (File.Exists(modelPath))
             {
                 network = Serializer.Load<ActivationNetwork>(modelPath);
-            } else
+            }
+            else
             {
                 network = new ActivationNetwork(
-                    function, 
-                    inputsCount: 6, 
+                    function,
+                    inputsCount: 6,
                     neuronsCount: new[] { 4, 4, 3 }
                     );
             }
@@ -87,14 +97,13 @@ namespace AccordNet
 
             // Classify the samples using the model
             double[][] answers = xTrain.Apply(network.Compute);
-        
-            Console.WriteLine(answers);
             
+            for(int i = 0; i < answers.Length; i++)
+            {
+                Console.WriteLine(string.Join(", ", answers[i]));
+            }
+
             Serializer.Save(network, modelPath);
-            
         }
     }
 }
-
-
-// Original code here: https://github.com/accord-net/framework/wiki/Classification

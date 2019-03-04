@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("AccordNet")]
+[assembly: AssemblyTitle("accordnet")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AccordNet")]
+[assembly: AssemblyProduct("accordnet")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
-[assembly: Guid("51255c53-53e4-4a82-ae61-7366a3907b84")]
+[assembly: Guid("a44492ad-3603-47f5-acfb-dbcf82dc67c9")]
 
 // Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
 //
