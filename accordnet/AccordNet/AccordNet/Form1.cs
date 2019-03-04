@@ -15,6 +15,7 @@ using Accord.MachineLearning.Bayes;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
 using System.IO;
+using System.Globalization;
 
 namespace AccordNet
 {
@@ -25,20 +26,22 @@ namespace AccordNet
             InitializeComponent();
         }
 
+        private const string modelPath = "mlp.accord";
+
         private double[][] LoadCSV(String name)
         {
             String completePath = @"\\VBOXSVR\Downloads\ssd\dataset\" + name + ".csv";
             var reader = new StreamReader(completePath);
 
-            List<List<double>> fileContent = new List<List<double>>();
+            List<double[]> fileContent = new List<double[]>();
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
-                var values = line.Split(';').Select(Double.Parse).ToList();
+                var values = line.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
                 fileContent.Add(values);
             }
 
-            return fileContent.Select(x => x.ToArray()).ToArray();
+            return fileContent.ToArray();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -47,34 +50,26 @@ namespace AccordNet
             double[][] yTrain = this.LoadCSV("ytrain");
             double[][] xTest = this.LoadCSV("xtest");
 
-            // Convert the DataTable to input and output vectors
-            //double[][] inputs = table.ToJagged<double>("X", "Y");
-            //int[] outputs = table.Columns["G"].ToArray<int>();
-
-            // Plot the data
-            //ScatterplotBox.Show("Yin-Yang", inputs, outputs).Hold();
-          
-
-            // Since we would like to learn binary outputs in the form
-            // [-1,+1], we can use a bipolar sigmoid activation function
-            IActivationFunction function = new BipolarSigmoidFunction();
+            IActivationFunction function = new SigmoidFunction();
 
             // In our problem, we have 2 inputs (x, y pairs), and we will 
             // be creating a network with 5 hidden neurons and 1 output:
             //
-            var network = new ActivationNetwork(function,
-                inputsCount: 2, neuronsCount: new[] { 5, 1 });
-
-            // Create a Levenberg-Marquardt algorithm
-            var teacher = new LevenbergMarquardtLearning(network)
+            ActivationNetwork network;
+            
+            if(File.Exists(modelPath))
             {
-                UseRegularization = true
-            };
+                network = Serializer.Load<ActivationNetwork>(modelPath);
+            } else
+            {
+                network = new ActivationNetwork(
+                    function, 
+                    inputsCount: 6, 
+                    neuronsCount: new[] { 4, 4, 3 }
+                    );
+            }
 
-            // Because the network is expecting multiple outputs,
-            // we have to convert our single variable into arrays
-            //
-            //var y = outputs.ToDouble().ToArray();
+            LevenbergMarquardtLearning teacher = new LevenbergMarquardtLearning(network, true);
 
             // Iterate until stop criteria is met
             double error = double.PositiveInfinity;
@@ -91,13 +86,15 @@ namespace AccordNet
 
 
             // Classify the samples using the model
-            int[] answers = xTrain.Apply(network.Compute).GetColumn(0).Apply(System.Math.Sign);
-
+            double[][] answers = xTrain.Apply(network.Compute);
+        
             Console.WriteLine(answers);
-
-            // Plot the results
-            /*ScatterplotBox.Show("Expected results", inputs, outputs);
-            ScatterplotBox.Show("Network results", inputs, answers).Hold();*/
+            
+            Serializer.Save(network, modelPath);
+            
         }
     }
 }
+
+
+// Original code here: https://github.com/accord-net/framework/wiki/Classification
