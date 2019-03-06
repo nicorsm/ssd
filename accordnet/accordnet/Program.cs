@@ -39,7 +39,7 @@ namespace accordnet
 
         private static double[][] LoadCSV(String name)
         {
-            String completePath = @"\\VBOXSVR\Downloads\ssd\dataset\" + name + ".csv";
+            String completePath = @"../../../../dataset/" + name + ".csv";
             var reader = new StreamReader(completePath);
 
             List<double[]> fileContent = new List<double[]>();

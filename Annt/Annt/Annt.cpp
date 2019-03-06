@@ -71,6 +71,7 @@ int main(int argc, char** argv)
 	vector<fvector_t> xTrain;
 	vector<fvector_t> yTrain;
 	vector<fvector_t> xTest;
+	vector<fvector_t> yTest;
 
 	if (!LoadData(xTrain, "xtrain.csv", 6))
 	{
@@ -90,9 +91,16 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	if (!LoadData(yTest, "ytest.csv", 6))
+	{
+		printf("Failed loading Y Test data \n\n");
+		return -1;
+	}
+
 	printf("Loaded %zu X Training entries \n\n", xTrain.size());
 	printf("Loaded %zu Y Training entries \n\n", yTrain.size());
 	printf("Loaded %zu X Test entries \n\n", xTest.size());
+	printf("Loaded %zu Y Test entries \n\n", yTest.size());
 
 	// make sure we have expected number of samples
 	int expectedEntries = 100;
@@ -104,15 +112,15 @@ int main(int argc, char** argv)
 
 	
 	// split the data set into two: training (120 samples) and test (30 samples)
-	/*vector<fvector_t> testAttributes = ExtractTestSamples(trainAttributes);
-	uvector_t         testLabels = ExtractTestSamples(trainLabels);
+	//vector<fvector_t> testAttributes = ExtractTestSamples(trainAttributes);
+	//uvector_t         testLabels = ExtractTestSamples(trainLabels);
 
-	printf("Using %zu samples for training and %zu samples for test \n\n", trainAttributes.size(), testAttributes.size());
-	*/
+	//printf("Using %zu samples for training and %zu samples for test \n\n", trainAttributes.size(), testAttributes.size());
+	
 
 	// perform one hot encoding of train/test labels
-	/*vector<fvector_t> encodedTrainLabels = XDataEncodingTools::OneHotEncoding(yTrain, 3);
-	vector<fvector_t> encodedTestLabels = XDataEncodingTools::OneHotEncoding(testLabels, 3);*/
+	//vector<fvector_t> encodedTrainLabels = XDataEncodingTools::OneHotEncoding(yTrain, 3);
+	//vector<fvector_t> encodedTestLabels = XDataEncodingTools::OneHotEncoding(yTest, 3);
 
 	// prepare a 3 layer ANN
 	shared_ptr<XNeuralNetwork> net = make_shared<XNeuralNetwork>();
@@ -131,10 +139,10 @@ int main(int argc, char** argv)
 
 	// using the helper for training ANN to do classification
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);
-	//trainingHelper.SetTestSamples(testAttributes, encodedTestLabels, testLabels);
+	trainingHelper.SetTestSamples(xTest, yTest, yTest);
 
-	// 40 epochs, 10 samples in batch
-	trainingHelper.RunTraining(40, 10, xTrain, yTrain, trainLabels);
+	// 1000 epochs, 10 samples in batch
+	trainingHelper.RunTraining(1000, 10, xTrain, yTrain, trainLabels);
 	
 	return 0;
 }
