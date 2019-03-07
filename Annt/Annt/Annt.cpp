@@ -138,11 +138,17 @@ int main(int argc, char** argv)
 		make_shared<XCrossEntropyCost>());
 
 	// using the helper for training ANN to do classification
+	string filePath = "mlp.annt";
+	uvector_t testLabels;
+
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);
-	trainingHelper.SetTestSamples(xTest, yTest, yTest);
+	trainingHelper.SetTestSamples(xTest, yTest, testLabels);
+	trainingHelper.SetInputFileName(filePath);
+	trainingHelper.SetOutputFileName(filePath);
+	trainingHelper.SetSaveMode(NetworkSaveMode::OnTrainingEnd);
 
 	// 1000 epochs, 10 samples in batch
-	trainingHelper.RunTraining(1000, 10, xTrain, yTrain, trainLabels);
+	trainingHelper.RunTraining(1000, 10, xTrain, yTrain, testLabels);
 	
 	return 0;
 }
