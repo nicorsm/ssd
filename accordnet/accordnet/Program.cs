@@ -98,7 +98,8 @@ namespace accordnet
 
             // Create the learning algorithm
             var teacher = new LevenbergMarquardtLearning(network);
-            
+            teacher.LearningRate = 0.06;
+
             // Teach the network for 10 iterations:
             double error = Double.PositiveInfinity;
 
@@ -114,6 +115,7 @@ namespace accordnet
 
             double[][] inputs = test.inputs.ToArray();
             int[] outputs = test.outputs.ToArray();
+            int correct = 0;
 
             for (int i = 0; i < inputs.Length; i++)
             {
@@ -126,10 +128,13 @@ namespace accordnet
 
                 // at this point, the variables 'answer' and
                 // 'expected' should contain the same value.
-                Console.WriteLine(string.Join(",", input));
+                //Console.WriteLine(string.Join(",", input));
                 Console.WriteLine("Expected: " + expected + ", answer: " + answer);
+
+                correct += expected == answer ? 1 : 0;
             }
 
+            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items", inputs.Length, correct, inputs.Length - correct);
             Serializer.Save(network, modelPath);
         }
     }

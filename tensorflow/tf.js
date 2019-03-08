@@ -61,7 +61,7 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const optimize = tf.train.sgd(0.5);
+  const optimize = tf.train.sgd(1.0);
 
   //config for model
   const config = {

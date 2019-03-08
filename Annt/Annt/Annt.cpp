@@ -103,14 +103,14 @@ int train(int argc, char** argv) {
 
 	// create training context with Nesterov optimizer and Cross Entropy cost function
 	shared_ptr<XNetworkTraining> netTraining = make_shared<XNetworkTraining>(net,
-		make_shared<XNesterovMomentumOptimizer>(0.01f),
+		make_shared<XGradientDescentOptimizer>(0.07f),
 		make_shared<XCrossEntropyCost>());
 
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);
 	trainingHelper.SetTestSamples(xTest, encodedYTest, yTest);
 	trainingHelper.SetInputFileName(FILE_NAME);
 	trainingHelper.SetOutputFileName(FILE_NAME);
-	trainingHelper.SetSaveMode(NetworkSaveMode::OnTrainingEnd);
+	trainingHelper.SetSaveMode(NetworkSaveMode::OnValidationImprovement);
 
 	// 40 epochs, 10 samples in batch
 	trainingHelper.RunTraining(40, 10, xTrain, encodedYTrain, yTrain);
