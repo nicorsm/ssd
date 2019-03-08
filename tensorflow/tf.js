@@ -8,30 +8,12 @@
     I   
 */
 
-
-//Dummy training data
-var x_train = tf.tensor([
-  [0.1, 0.5, 0.1, 0.1, 0.5, 0.1],
-  [0.9, 0.3, 0.4, 0.1, 0.5, 0.1],
-  [0.4, 0.5, 0.5, 0.1, 0.5, 0.1],
-  [0.7, 0.1, 0.9, 0.1, 0.5, 0.1]
-])
-
-//Dummy training labels
-var y_train = tf.tensor([
-  [0.2, 0.8, 0.1],
-  [0.9, 0.1, 0.1],
-  [0.4, 0.6, 0.1],
-  [0.5, 0.5, 0.1]
-])
-
-//Dummy testing data
-var x_test = tf.tensor([
-  //[0.9, 0.1, 0.5, 0.1, 0.5, 0.1]
-])
+var x_train, y_train, x_test, y_test;
 
 const modelName = "ssdmodel"
 const modelPath = "localstorage://" + modelName;
+const inputs = 6;
+const outputs = 3;
 
 loadCSV();
 
@@ -42,7 +24,7 @@ function setupNewModel() {
 
   //config for layer
   const config_hidden_1 = {
-    inputShape: [6],
+    inputShape: [inputs],
     activation: "sigmoid",
     units: 4
   }
@@ -53,7 +35,7 @@ function setupNewModel() {
   }
 
   const config_output = {
-    units: 3,
+    units: outputs,
     activation: "sigmoid"
   }
 
@@ -79,7 +61,7 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const optimize = tf.train.sgd(0.1);
+  const optimize = tf.train.sgd(1.0);
 
   //config for model
   const config = {
@@ -93,7 +75,19 @@ function compileAndPredict(model) {
   train_data(model).then(model => {
     console.log("Training is Complete");
     console.log("Predictions :");
-    model.predict(x_test).print();
+    let prediction = model.predict(x_test);
+    let predictions = Array.from(prediction.argMax(1).dataSync());
+    let ytest_array = Array.from(y_test.argMax(1).dataSync());
+    var i;
+    for(i = 0; i < predictions.length; i++) {
+      let pred = predictions[i];
+      let expected = ytest_array[i];
+      var no = "";
+      if(pred != expected) {
+        no = "<!> "
+      }
+      console.log(no + "Expected: " + expected + ", predicted: " + pred);
+    }
     save(model)
   })
 }
@@ -123,26 +117,26 @@ function clearStorage() {
 }
 
 function loadCSV() {
-  loadLocalCSV("xtrain").then(xtrain => {
-    x_train = tf.tensor(xtrain);
-    loadLocalCSV("ytrain").then(ytrain => {
-      y_train = tf.tensor(ytrain);
-      loadLocalCSV("xtest").then(xtest => {
-        x_test = tf.tensor(xtest);
-        if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
-          trainOnExistingModel();
-        } else {
-          setupNewModel();
-        }
-      });
+  loadLocalCSV("train").then(trainResult => {
+    x_train = tf.tensor(trainResult[0]);
+    y_train = tf.oneHot(tf.tensor1d(trainResult[1], 'int32'), outputs);
+    loadLocalCSV("test").then(testResult => {
+      x_test = tf.tensor(testResult[0]);
+      y_test = tf.oneHot(tf.tensor1d(testResult[1], 'int32'), outputs);
+      if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
+        trainOnExistingModel();
+      } else {
+        setupNewModel();
+      }
     });
   });
 }
 
 function loadLocalCSV(identifier) {
+  let branch = "three-classes"
   return new Promise((resolve, reject) => {
     var file, fr;
-    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv";
+    file = "https://raw.githubusercontent.com/nicorsm/ssd/" + branch + "/dataset/" + identifier + ".csv";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", file, true);
     xhr.responseType = "blob";
@@ -152,12 +146,17 @@ function loadLocalCSV(identifier) {
         fr = new FileReader();
         fr.onload = function (e) {
           let lines = fr.result.split("\n");
-          var array = lines.map(x => {
-            return x.split(";").map(str => {
+          var inputLines = [];
+          var outputLines = [];
+
+          lines.forEach(x => {
+            let values = x.split(",");
+            inputLines.push(values.slice(0, inputs).map(str => {
               return parseFloat(str);
-            });
+            }));
+            outputLines.push(parseInt(values.slice(inputs, inputs+1)[0]));
           });
-          resolve(array);
+          resolve([inputLines, outputLines]);
         };
         fr.onerror = reject;
         fr.readAsText(fileObject);

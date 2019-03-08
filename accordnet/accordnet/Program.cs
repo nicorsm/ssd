@@ -34,30 +34,38 @@ namespace accordnet
             }
         }
 
+        private class Result
+        {
+            public List<double[]> inputs = new List<double[]>();
+            public List<int> outputs = new List<int>();
+        }
+
 
         private const string modelPath = "mlp.accord";
 
-        private static double[][] LoadCSV(String name)
+        private static Result LoadCSV(String name)
         {
             String completePath = @"../../../../dataset/" + name + ".csv";
             var reader = new StreamReader(completePath);
 
-            List<double[]> fileContent = new List<double[]>();
+            Result res = new Result();
+
             while (!reader.EndOfStream)
             {
+                //Input type: %f,%f,%f,%f,%f,%f,%d (%f = inputs, %d = expected output)
                 var line = reader.ReadLine();
-                var values = line.Split(';').Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                fileContent.Add(values);
+                var values = line.Split(',');
+                res.inputs.Add(values.Take(6).Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray());
+                res.outputs.Add(values.Skip(6).Take(1).Select(s => int.Parse(s, CultureInfo.InvariantCulture)).First());
             }
 
-            return fileContent.ToArray();
+            return res;
         }
 
         private static void compute()
         {
-            double[][] xTrain = LoadCSV("xtrain");
-            double[][] yTrain = LoadCSV("ytrain");
-            double[][] xTest = LoadCSV("xtest");
+            Result train = LoadCSV("train");
+            Result test = LoadCSV("test");
 
             IActivationFunction function = new SigmoidFunction();
 
@@ -65,6 +73,7 @@ namespace accordnet
             // be creating a network with 5 hidden neurons and 1 output:
             //
             ActivationNetwork network;
+            int nOutputs = 3;
 
             if (File.Exists(modelPath))
             {
@@ -75,34 +84,57 @@ namespace accordnet
                 network = new ActivationNetwork(
                     function,
                     inputsCount: 6,
-                    neuronsCount: new[] { 4, 4, 3 }
+                    neuronsCount: new[] { 4, 4, nOutputs }
                     );
             }
 
-            LevenbergMarquardtLearning teacher = new LevenbergMarquardtLearning(network, true);
-
             // Iterate until stop criteria is met
-            double error = double.PositiveInfinity;
             double previous;
+
+            double[][] jaggedOutputs = Jagged.OneHot(train.outputs.ToArray());
+
+            // Heuristically randomize the network
+            new NguyenWidrow(network).Randomize();
+
+            // Create the learning algorithm
+            var teacher = new LevenbergMarquardtLearning(network);
+            teacher.LearningRate = 0.06;
+
+            // Teach the network for 10 iterations:
+            double error = Double.PositiveInfinity;
 
             do
             {
                 previous = error;
-
-                // Compute one learning iteration
-                error = teacher.RunEpoch(xTrain, yTrain);
-
+                error = teacher.RunEpoch(train.inputs.ToArray(), jaggedOutputs);
             } while (Math.Abs(previous - error) < 1e-10 * previous);
 
 
-            // Classify the samples using the model
-            double[][] answers = xTrain.Apply(network.Compute);
-            
-            for(int i = 0; i < answers.Length; i++)
+            // At this point, the network should be able to 
+            // perfectly classify the training input points.
+
+            double[][] inputs = test.inputs.ToArray();
+            int[] outputs = test.outputs.ToArray();
+            int correct = 0;
+
+            for (int i = 0; i < inputs.Length; i++)
             {
-                Console.WriteLine(string.Join(", ", answers[i]));
+                int answer;
+                double[] input = inputs[i];
+                double[] output = network.Compute(input);
+                double response = output.Max(out answer);
+
+                int expected = outputs[i];
+
+                // at this point, the variables 'answer' and
+                // 'expected' should contain the same value.
+                //Console.WriteLine(string.Join(",", input));
+                Console.WriteLine("Expected: " + expected + ", answer: " + answer);
+
+                correct += expected == answer ? 1 : 0;
             }
 
+            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items", inputs.Length, correct, inputs.Length - correct);
             Serializer.Save(network, modelPath);
         }
     }
