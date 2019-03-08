@@ -3,6 +3,7 @@
 
 #include "pch.h"
 #include <iostream>
+#include <string>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -16,10 +17,12 @@ using namespace ANNT::Neuro;
 using namespace ANNT::Neuro::Training;
 
 static const string BASE = "../../dataset/";
+static const string FILE_NAME = "mlp.annt";
 
-bool LoadData(vector<fvector_t>& attributes, string fileName, int expectedFields)
+bool LoadData(vector<fvector_t>& attributes, uvector_t& labels, string fileName)
 {
 	bool  ret = false;
+	int expectedFields = 6 + 1;
 
 	string path = "";
 	path.append(BASE).append(fileName);
@@ -43,16 +46,12 @@ bool LoadData(vector<fvector_t>& attributes, string fileName, int expectedFields
 			if (len != 0)
 			{
 				float attr1, attr2, attr3, attr4, attr5, attr6;
+				size_t label;
 
-				if ((sscanf_s(buff, "%f;%f;%f", &attr1, &attr2, &attr3) == expectedFields) ||
-					(sscanf_s(buff, "%f;%f;%f;%f;%f;%f", &attr1, &attr2, &attr3, &attr4, &attr5, &attr6) == expectedFields))
+				if ((sscanf_s(buff, "%f,%f,%f,%f,%f,%f,%u", &attr1, &attr2, &attr3, &attr4, &attr5, &attr6, &label) == expectedFields))
 				{
-					if (expectedFields == 3) {
-						attributes.push_back(fvector_t({ attr1, attr2, attr3 }));
-					}
-					else if (expectedFields == 6) {
-						attributes.push_back(fvector_t({ attr1, attr2, attr3, attr4, attr5, attr6 }));
-					}
+					attributes.push_back(fvector_t({ attr1, attr2, attr3, attr4, attr5, attr6 }));
+					labels.push_back(label);
 				}
 			}
 		}
@@ -64,36 +63,22 @@ bool LoadData(vector<fvector_t>& attributes, string fileName, int expectedFields
 	return ret;
 }
 
-int main(int argc, char** argv)
-{
-    std::cout << "Hello World!\n"; 
+int train(int argc, char** argv) {
 
 	vector<fvector_t> xTrain;
-	vector<fvector_t> yTrain;
+	uvector_t yTrain;
 	vector<fvector_t> xTest;
-	vector<fvector_t> yTest;
+	uvector_t yTest;
 
-	if (!LoadData(xTrain, "xtrain.csv", 6))
+	if (!LoadData(xTrain, yTrain, "train.csv"))
 	{
-		printf("Failed loading X Training data \n\n");
+		printf("Failed loading Training data \n\n");
 		return -1;
 	}
 
-	if (!LoadData(yTrain, "ytrain.csv", 3))
+	if (!LoadData(xTest, yTest, "test.csv"))
 	{
-		printf("Failed loading Y Training data \n\n");
-		return -1;
-	}
-
-	if (!LoadData(xTest, "xtest.csv", 6))
-	{
-		printf("Failed loading X Test data \n\n");
-		return -1;
-	}
-
-	if (!LoadData(yTest, "ytest.csv", 6))
-	{
-		printf("Failed loading Y Test data \n\n");
+		printf("Failed loading Test data \n\n");
 		return -1;
 	}
 
@@ -102,25 +87,9 @@ int main(int argc, char** argv)
 	printf("Loaded %zu X Test entries \n\n", xTest.size());
 	printf("Loaded %zu Y Test entries \n\n", yTest.size());
 
-	// make sure we have expected number of samples
-	int expectedEntries = 100;
-	if (xTrain.size() != expectedEntries || yTrain.size() != expectedEntries || xTrain.size() != yTrain.size())
-	{
-		printf("The data set is expected to provide 100 samples \n\n");
-		return -2;
-	}
-
-	
-	// split the data set into two: training (120 samples) and test (30 samples)
-	//vector<fvector_t> testAttributes = ExtractTestSamples(trainAttributes);
-	//uvector_t         testLabels = ExtractTestSamples(trainLabels);
-
-	//printf("Using %zu samples for training and %zu samples for test \n\n", trainAttributes.size(), testAttributes.size());
-	
-
 	// perform one hot encoding of train/test labels
-	//vector<fvector_t> encodedTrainLabels = XDataEncodingTools::OneHotEncoding(yTrain, 3);
-	//vector<fvector_t> encodedTestLabels = XDataEncodingTools::OneHotEncoding(yTest, 3);
+	vector<fvector_t> encodedYTrain = XDataEncodingTools::OneHotEncoding(yTrain, 3);
+	vector<fvector_t> encodedYTest = XDataEncodingTools::OneHotEncoding(yTest, 3);
 
 	// prepare a 3 layer ANN
 	shared_ptr<XNeuralNetwork> net = make_shared<XNeuralNetwork>();
@@ -137,20 +106,38 @@ int main(int argc, char** argv)
 		make_shared<XNesterovMomentumOptimizer>(0.01f),
 		make_shared<XCrossEntropyCost>());
 
-	// using the helper for training ANN to do classification
-	string filePath = "mlp.annt";
-	uvector_t testLabels;
-
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);
-	trainingHelper.SetTestSamples(xTest, yTest, testLabels);
-	trainingHelper.SetInputFileName(filePath);
-	trainingHelper.SetOutputFileName(filePath);
+	trainingHelper.SetTestSamples(xTest, encodedYTest, yTest);
+	trainingHelper.SetInputFileName(FILE_NAME);
+	trainingHelper.SetOutputFileName(FILE_NAME);
 	trainingHelper.SetSaveMode(NetworkSaveMode::OnTrainingEnd);
 
-	// 1000 epochs, 10 samples in batch
-	trainingHelper.RunTraining(1000, 10, xTrain, yTrain, testLabels);
-	
+	// 40 epochs, 10 samples in batch
+	trainingHelper.RunTraining(40, 10, xTrain, encodedYTrain, yTrain);
+
 	return 0;
+}
+
+int main(int argc, char** argv)
+{
+	while (true)
+	{
+		cout << "Press ENTER to compute values from the current model.\n";
+		cout << "Press C to clear the current model.";
+
+		string ln;
+		getline(cin, ln);
+		transform(ln.begin(), ln.end(), ln.begin(), ::tolower);
+
+		if (ln == "c")
+		{
+			remove(FILE_NAME.c_str());
+		}
+		else
+		{
+			train(argc, argv);
+		}
+	}
 }
 
 // Per eseguire il programma: CTRL+F5 oppure Debug > Avvia senza eseguire debug

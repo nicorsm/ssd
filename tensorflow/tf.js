@@ -8,7 +8,7 @@
     I   
 */
 
-
+/*
 //Dummy training data
 var x_train = tf.tensor([
   [0.1, 0.5, 0.1, 0.1, 0.5, 0.1],
@@ -28,7 +28,9 @@ var y_train = tf.tensor([
 //Dummy testing data
 var x_test = tf.tensor([
   //[0.9, 0.1, 0.5, 0.1, 0.5, 0.1]
-])
+])*/
+
+var x_train, y_train, x_test, y_test;
 
 const modelName = "ssdmodel"
 const modelPath = "localstorage://" + modelName;
@@ -123,18 +125,17 @@ function clearStorage() {
 }
 
 function loadCSV() {
-  loadLocalCSV("xtrain").then(xtrain => {
+  loadLocalCSV("train").then((xtrain, ytrain) => {
     x_train = tf.tensor(xtrain);
-    loadLocalCSV("ytrain").then(ytrain => {
-      y_train = tf.tensor(ytrain);
-      loadLocalCSV("xtest").then(xtest => {
-        x_test = tf.tensor(xtest);
-        if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
-          trainOnExistingModel();
-        } else {
-          setupNewModel();
-        }
-      });
+    y_train = tf.tensor(ytrain);
+    loadLocalCSV("test").then((xtest, ytest) => {
+      x_test = tf.tensor(xtest);
+      y_test = tf.tensor(ytest);
+      if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
+        trainOnExistingModel();
+      } else {
+        setupNewModel();
+      }
     });
   });
 }
