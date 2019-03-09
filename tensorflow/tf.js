@@ -133,10 +133,9 @@ function loadCSV() {
 }
 
 function loadLocalCSV(identifier) {
-  let branch = "three-classes"
   return new Promise((resolve, reject) => {
     var file, fr;
-    file = "https://raw.githubusercontent.com/nicorsm/ssd/" + branch + "/dataset/" + identifier + ".csv";
+    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", file, true);
     xhr.responseType = "blob";
