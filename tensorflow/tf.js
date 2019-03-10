@@ -1,11 +1,11 @@
 /*
-    // 6 ingressi reali 
-    I       // 2 strati nascosti completamente connessi        
-    I   H   H        
-    I   H   H   O   
+    // 6 ingressi reali
+    I       // 2 strati nascosti completamente connessi
+    I   H   H
+    I   H   H   O
     I   H   H   O   // 3 uscite reali
     I   H   H   O
-    I   
+    I
 */
 
 var x_train, y_train, x_test, y_test;
@@ -61,7 +61,8 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const optimize = tf.train.sgd(1.0);
+  const LEARNING_RATE = 0.01;
+  const optimize = tf.train.adam(LEARNING_RATE);
 
   //config for model
   const config = {
