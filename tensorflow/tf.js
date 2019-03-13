@@ -12,7 +12,7 @@ var x_train, y_train, x_test, y_test;
 
 const modelName = "ssdmodel"
 const modelPath = "localstorage://" + modelName;
-const inputs = 6;
+const inputs = 9;
 const outputs = 3;
 
 loadCSV();
@@ -25,18 +25,18 @@ function setupNewModel() {
   //config for layer
   const config_hidden_1 = {
     inputShape: [inputs],
-    activation: "sigmoid",
+    activation: "relu",
     units: 4
   }
 
   const config_hidden_2 = {
     units: 4,
-    activation: "sigmoid"
+    activation: "relu"
   }
 
   const config_output = {
     units: outputs,
-    activation: "sigmoid"
+    activation: "softmax"
   }
 
   //defining the hidden and output layer
@@ -61,7 +61,8 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const optimize = tf.train.sgd(1.0);
+  const LEARNING_RATE = 0.01;
+  const optimize = tf.train.adam(LEARNING_RATE);
 
   //config for model
   const config = {
@@ -76,8 +77,8 @@ function compileAndPredict(model) {
     console.log("Training is Complete");
     console.log("Predictions :");
     let prediction = model.predict(x_test);
-    let predictions = Array.from(prediction.argMax(1).dataSync());
-    let ytest_array = Array.from(y_test.argMax(1).dataSync());
+    let predictions = Array.from(prediction.dataSync());
+    let ytest_array = Array.from(y_test.dataSync());
     var i;
     for(i = 0; i < predictions.length; i++) {
       let pred = predictions[i];
@@ -119,10 +120,10 @@ function clearStorage() {
 function loadCSV() {
   loadLocalCSV("train").then(trainResult => {
     x_train = tf.tensor(trainResult[0]);
-    y_train = tf.oneHot(tf.tensor1d(trainResult[1], 'int32'), outputs);
+    y_train = tf.tensor(trainResult[1]);
     loadLocalCSV("test").then(testResult => {
       x_test = tf.tensor(testResult[0]);
-      y_test = tf.oneHot(tf.tensor1d(testResult[1], 'int32'), outputs);
+      y_test = tf.tensor(testResult[1]);
       if (localStorage.getItem("tensorflowjs_models/" + modelName + "/info") != null) {
         trainOnExistingModel();
       } else {
@@ -135,7 +136,7 @@ function loadCSV() {
 function loadLocalCSV(identifier) {
   return new Promise((resolve, reject) => {
     var file, fr;
-    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv";
+    file = "https://raw.githubusercontent.com/nicorsm/ssd/new-data/dataset/" + identifier + ".csv";
     var xhr = new XMLHttpRequest();
     xhr.open("GET", file, true);
     xhr.responseType = "blob";
@@ -153,7 +154,9 @@ function loadLocalCSV(identifier) {
             inputLines.push(values.slice(0, inputs).map(str => {
               return parseFloat(str);
             }));
-            outputLines.push(parseInt(values.slice(inputs, inputs+1)[0]));
+            outputLines.push(values.slice(inputs, inputs+outputs).map(str => {
+              return parseFloat(str);
+            }));
           });
           resolve([inputLines, outputLines]);
         };
