@@ -12,7 +12,7 @@ var x_train, y_train, x_test, y_test;
 
 const modelName = "ssdmodel"
 const modelPath = "localstorage://" + modelName;
-const inputs = 9;
+const inputs = 6;
 const outputs = 3;
 
 loadCSV();
