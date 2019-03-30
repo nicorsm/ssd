@@ -61,7 +61,7 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const LEARNING_RATE = 0.001;
+  const LEARNING_RATE = 0.01;
   const optimize = tf.train.adam(LEARNING_RATE);
 
   //config for model
@@ -80,15 +80,22 @@ function compileAndPredict(model) {
     let predictions = Array.from(prediction.dataSync());
     let ytest_array = Array.from(y_test.dataSync());
     var i;
+    var ok = 0;
     for(i = 0; i < predictions.length; i++) {
       let pred = predictions[i];
       let expected = ytest_array[i];
+      let tolerance = expected * (0.25 / 2.0);
+      let lowerRange = expected - tolerance;
+      let upperRange = expected + tolerance;
       var no = "";
-      if(pred != expected) {
+      if(pred < lowerRange || pred > upperRange) {
         no = "<!> "
+      } else {
+        ok += 1;
       }
       console.log(no + "Expected: " + expected + ", predicted: " + pred);
     }
+    console.log("Predictions: " + predictions.length + ", correct: " + ok + ", wrong: " + (predictions.length - ok));
     save(model)
   })
 }
