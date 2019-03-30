@@ -144,6 +144,7 @@ function loadLocalCSV(identifier) {
   return new Promise((resolve, reject) => {
     var file, fr;
     file = "https://raw.githubusercontent.com/nicorsm/ssd/new-data/dataset/" + identifier + ".csv?ts=" + Date.now();
+    console.log(file);
     var xhr = new XMLHttpRequest();
     xhr.open("GET", file, true);
     xhr.responseType = "blob";
