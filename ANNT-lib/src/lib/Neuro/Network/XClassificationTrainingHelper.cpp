@@ -218,14 +218,14 @@ XClassificationTrainingHelper::XClassificationTrainingHelper( const shared_ptr<X
 
 // Sets validation samples to use for validating classification after each training epch
 void XClassificationTrainingHelper::SetValidationSamples( const vector<fvector_t>& validationInputs,
-                                                          const vector<fvector_t>& validationOutputs,
-                                                          const uvector_t& validationLabels )
+                                                          const vector<fvector_t>& validationOutputs)//,
+                                                          //const uvector_t& validationLabels )
 {
     size_t samplesCount = validationInputs.size( );
 
     mValidationInputs.resize( validationInputs.size( ) );
     mValidationOutputs.resize( validationOutputs.size( ) );
-    mValidationLabels = validationLabels;
+    //mValidationLabels = validationLabels;
 
     for ( size_t i = 0; i < samplesCount; i++ )
     {
@@ -236,14 +236,13 @@ void XClassificationTrainingHelper::SetValidationSamples( const vector<fvector_t
 
 // Sets test samples to use for testing classification after training is complete
 void XClassificationTrainingHelper::SetTestSamples( const std::vector<fvector_t>& testInputs,
-                                                    const std::vector<fvector_t>& testOutputs,
-                                                    const uvector_t& testLabels )
+                                                    const std::vector<fvector_t>& testOutputs)
 {
     size_t samplesCount = testInputs.size( );
 
     mTestInputs.resize( testInputs.size( ) );
     mTestOutputs.resize( testOutputs.size( ) );
-    mTestLabels = testLabels;
+    //mTestLabels = testLabels;
 
     for ( size_t i = 0; i < samplesCount; i++ )
     {
@@ -253,10 +252,10 @@ void XClassificationTrainingHelper::SetTestSamples( const std::vector<fvector_t>
 }
 
 // Runs training loop providing progress to stdout
-void XClassificationTrainingHelper::RunTraining( size_t epochs, size_t batchSize,
-                                                 const vector<fvector_t>& trainingInputs,
-                                                 const vector<fvector_t>& trainingOutputs,
-                                                 const uvector_t& trainingLabels )
+void XClassificationTrainingHelper::RunTraining(size_t epochs, size_t batchSize,
+	const vector<fvector_t>& trainingInputs,
+	const vector<fvector_t>& trainingOutputs);// ,
+                                                 //const uvector_t& trainingLabels )
 {
     // default training parameters
     Helpers::TrainingParams     trainingParams;
@@ -327,7 +326,7 @@ void XClassificationTrainingHelper::RunTraining( size_t epochs, size_t batchSize
     if ( trainingParams.RunPreTrainingTest )
     {
         timeStart = steady_clock::now( );
-        correct   = mNetworkTraining->TestClassification( trainingInputs, trainingLabels, trainingOutputs, &cost );
+        correct   = mNetworkTraining->TestClassification( trainingInputs, trainingOutputs, &cost );
         timeTaken = duration_cast<milliseconds>( steady_clock::now( ) - timeStart ).count( );
 
         printf( "Before training: accuracy = %0.2f%% (%zu/%zu), cost = %0.4f, %0.3fs \n\n",
@@ -436,7 +435,7 @@ void XClassificationTrainingHelper::RunTraining( size_t epochs, size_t batchSize
         if ( ( !trainingParams.RunValidationOnly ) || ( mValidationInputs.size( ) == 0 ) )
         {
             timeStart = steady_clock::now( );
-            correct   = mNetworkTraining->TestClassification( trainingInputs, trainingLabels, trainingOutputs, &cost );
+            correct   = mNetworkTraining->TestClassification( trainingInputs, trainingOutputs, &cost );
             timeTaken = duration_cast<milliseconds>( steady_clock::now( ) - timeStart ).count( );
 
             printf( "Training accuracy = %0.2f%% (%zu/%zu), cost = %0.4f, %0.3fs \n",
@@ -455,7 +454,7 @@ void XClassificationTrainingHelper::RunTraining( size_t epochs, size_t batchSize
         if ( mValidationInputs.size( ) != 0 )
         {
             timeStart = steady_clock::now( );
-            correct   = mNetworkTraining->TestClassification( mValidationInputs, mValidationLabels, mValidationOutputs, &cost );
+            correct   = mNetworkTraining->TestClassification( mValidationInputs, mValidationOutputs, &cost );
             timeTaken = duration_cast<milliseconds>( steady_clock::now( ) - timeStart ).count( );
 
             printf( "Validation accuracy = %0.2f%% (%zu/%zu), cost = %0.4f, %0.3fs \n",
@@ -483,7 +482,7 @@ void XClassificationTrainingHelper::RunTraining( size_t epochs, size_t batchSize
     if ( mTestInputs.size( ) != 0 )
     {
         timeStart = steady_clock::now( );
-        correct   = mNetworkTraining->TestClassification( mTestInputs, mTestLabels, mTestOutputs, &cost );
+        correct   = mNetworkTraining->TestClassification( mTestInputs, mTestOutputs, &cost );
         timeTaken = duration_cast<milliseconds>( steady_clock::now( ) - timeStart ).count( );
 
         printf( "\nTest accuracy = %0.2f%% (%zu/%zu), cost = %0.4f, %0.3fs \n",
