@@ -19,10 +19,10 @@ using namespace ANNT::Neuro::Training;
 static const string BASE = "../../dataset/";
 static const string FILE_NAME = "mlp.annt";
 
-bool LoadData(vector<fvector_t>& attributes, uvector_t& labels, string fileName)
+bool LoadData(vector<fvector_t>& attributes, vector<fvector_t>& labels, string fileName)
 {
 	bool  ret = false;
-	int expectedFields = 6 + 1;
+	int expectedFields = 6 + 3;
 
 	string path = "";
 	path.append(BASE).append(fileName);
@@ -46,12 +46,12 @@ bool LoadData(vector<fvector_t>& attributes, uvector_t& labels, string fileName)
 			if (len != 0)
 			{
 				float attr1, attr2, attr3, attr4, attr5, attr6;
-				size_t label;
+				float label1, label2, label3;
 
-				if ((sscanf_s(buff, "%f,%f,%f,%f,%f,%f,%u", &attr1, &attr2, &attr3, &attr4, &attr5, &attr6, &label) == expectedFields))
+				if ((sscanf_s(buff, "%f,%f,%f,%f,%f,%f,%f,%f,%f", &attr1, &attr2, &attr3, &attr4, &attr5, &attr6, &label1, &label2, &label3) == expectedFields))
 				{
 					attributes.push_back(fvector_t({ attr1, attr2, attr3, attr4, attr5, attr6 }));
-					labels.push_back(label);
+					labels.push_back(fvector_t({ label1, label2, label3 }));
 				}
 			}
 		}
@@ -66,9 +66,9 @@ bool LoadData(vector<fvector_t>& attributes, uvector_t& labels, string fileName)
 int train(int argc, char** argv) {
 
 	vector<fvector_t> xTrain;
-	uvector_t yTrain;
+	vector<fvector_t> yTrain;
 	vector<fvector_t> xTest;
-	uvector_t yTest;
+	vector<fvector_t> yTest;
 
 	if (!LoadData(xTrain, yTrain, "train.csv"))
 	{
@@ -88,32 +88,32 @@ int train(int argc, char** argv) {
 	printf("Loaded %zu Y Test entries \n\n", yTest.size());
 
 	// perform one hot encoding of train/test labels
-	vector<fvector_t> encodedYTrain = XDataEncodingTools::OneHotEncoding(yTrain, 3);
-	vector<fvector_t> encodedYTest = XDataEncodingTools::OneHotEncoding(yTest, 3);
+	vector<fvector_t> encodedYTrain = yTrain;
+	vector<fvector_t> encodedYTest = yTest; 
 
 	// prepare a 3 layer ANN
 	shared_ptr<XNeuralNetwork> net = make_shared<XNeuralNetwork>();
 
 	net->AddLayer(make_shared<XFullyConnectedLayer>(6, 4));
-	net->AddLayer(make_shared<XSigmoidActivation>());
+	net->AddLayer(make_shared<XReLuActivation>());
 	net->AddLayer(make_shared<XFullyConnectedLayer>(4, 4));
-	net->AddLayer(make_shared<XSigmoidActivation>());
+	net->AddLayer(make_shared<XReLuActivation>());
 	net->AddLayer(make_shared<XFullyConnectedLayer>(4, 3));
-	net->AddLayer(make_shared<XSigmoidActivation>());
+	net->AddLayer(make_shared<XSoftMaxActivation>());
 
 	// create training context with Nesterov optimizer and Cross Entropy cost function
 	shared_ptr<XNetworkTraining> netTraining = make_shared<XNetworkTraining>(net,
-		make_shared<XGradientDescentOptimizer>(0.07f),
+		make_shared<XAdamOptimizer>(0.1f),
 		make_shared<XCrossEntropyCost>());
 
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);
-	trainingHelper.SetTestSamples(xTest, encodedYTest, yTest);
+	trainingHelper.SetTestSamples(xTest, encodedYTest);
 	trainingHelper.SetInputFileName(FILE_NAME);
 	trainingHelper.SetOutputFileName(FILE_NAME);
 	trainingHelper.SetSaveMode(NetworkSaveMode::OnValidationImprovement);
 
 	// 40 epochs, 10 samples in batch
-	trainingHelper.RunTraining(40, 10, xTrain, encodedYTrain, yTrain);
+	trainingHelper.RunTraining(40, 10, xTrain, encodedYTrain);
 
 	return 0;
 }

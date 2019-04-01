@@ -37,7 +37,7 @@ namespace accordnet
         private class Result
         {
             public List<double[]> inputs = new List<double[]>();
-            public List<int> outputs = new List<int>();
+            public List<double[]> outputs = new List<double[]>();
         }
 
 
@@ -56,7 +56,7 @@ namespace accordnet
                 var line = reader.ReadLine();
                 var values = line.Split(',');
                 res.inputs.Add(values.Take(6).Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray());
-                res.outputs.Add(values.Skip(6).Take(1).Select(s => int.Parse(s, CultureInfo.InvariantCulture)).First());
+                res.outputs.Add(values.Skip(6).Take(3).Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray());
             }
 
             return res;
@@ -91,14 +91,14 @@ namespace accordnet
             // Iterate until stop criteria is met
             double previous;
 
-            double[][] jaggedOutputs = Jagged.OneHot(train.outputs.ToArray());
+            double[][] jaggedOutputs = train.outputs.ToArray(); // Jagged.OneHot(train.outputs.ToArray());
 
             // Heuristically randomize the network
             new NguyenWidrow(network).Randomize();
 
             // Create the learning algorithm
             var teacher = new LevenbergMarquardtLearning(network);
-            teacher.LearningRate = 0.06;
+            teacher.LearningRate = 0.0001;
 
             // Teach the network for 10 iterations:
             double error = Double.PositiveInfinity;
@@ -114,27 +114,43 @@ namespace accordnet
             // perfectly classify the training input points.
 
             double[][] inputs = test.inputs.ToArray();
-            int[] outputs = test.outputs.ToArray();
+            double[][] outputs = test.outputs.ToArray();
             int correct = 0;
+            int items = 0;
 
             for (int i = 0; i < inputs.Length; i++)
             {
-                int answer;
                 double[] input = inputs[i];
                 double[] output = network.Compute(input);
-                double response = output.Max(out answer);
 
-                int expected = outputs[i];
+                for(int k = 0; k < output.Length; k++)
+                {
+                    double expected = outputs[i][k];
+                    double predicted = output[k];
+                    double threshold = expected * (0.25 / 2.0);
+                    double lowerBound = expected - threshold;
+                    double upperBound = expected + threshold;
+                    Console.WriteLine("Result [{0}][{1}], Expected: {2}, Predicted: {3}", i, k, expected, predicted);
+                    
+                    if(predicted >= lowerBound && predicted <= upperBound)
+                    {
+                        correct++;
+                    }
+                    items++;
+                }
+                //double response = output.Max(out answer);
+
+                //int expected = outputs[i];
 
                 // at this point, the variables 'answer' and
                 // 'expected' should contain the same value.
                 //Console.WriteLine(string.Join(",", input));
-                Console.WriteLine("Expected: " + expected + ", answer: " + answer);
+                //Console.WriteLine("Expected: " + string.Join(",", outputs[i]) + ", predicted: " + string.Join(",", output));
 
-                correct += expected == answer ? 1 : 0;
+                //correct += expected == answer ? 1 : 0;
             }
 
-            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items", inputs.Length, correct, inputs.Length - correct);
+            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items", items, correct, items - correct);
             Serializer.Save(network, modelPath);
         }
     }

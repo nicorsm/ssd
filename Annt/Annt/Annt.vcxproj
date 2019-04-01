@@ -151,57 +151,57 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Debug\include\ANNT.hpp" />
-    <ClInclude Include="Debug\include\Config.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\ICostFunction.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\XAbsoluteCost.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\XBinaryCrossEntropyCost.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\XCrossEntropyCost.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\XMSECost.hpp" />
-    <ClInclude Include="Debug\include\Neuro\CostFunctions\XNegativeLogLikelihoodCost.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\IActivationLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XEluActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XLeakyReLuActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XLogSoftMaxActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XReLuActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XSigmoidActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XSoftMaxActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Activations\XTanhActivation.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\ILayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\ITrainableLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\LayerIDs.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Processing\IProcessingLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Processing\XAveragePooling.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Processing\XBatchNormalization.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Processing\XDropOutLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\Processing\XMaxPooling.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\XConvolutionLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\XFullyConnectedLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\XGRULayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\XLSTMLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Layers\XRecurrentLayer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Network\XClassificationTrainingHelper.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Network\XNetworkContext.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Network\XNetworkInference.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Network\XNetworkTraining.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Network\XNeuralNetwork.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\INetworkOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XAdagradOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XAdamOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XGradientDescentOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XMomentumOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XNesterovMomentumOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Neuro\Optimizers\XRMSpropOptimizer.hpp" />
-    <ClInclude Include="Debug\include\Tools\IVectorTools.hpp" />
-    <ClInclude Include="Debug\include\Tools\XAvxVectorTools.hpp" />
-    <ClInclude Include="Debug\include\Tools\XCpu.hpp" />
-    <ClInclude Include="Debug\include\Tools\XDataEncodingTools.hpp" />
-    <ClInclude Include="Debug\include\Tools\XParallel.hpp" />
-    <ClInclude Include="Debug\include\Tools\XSseVectorTools.hpp" />
-    <ClInclude Include="Debug\include\Tools\XVectorize.hpp" />
-    <ClInclude Include="Debug\include\Tools\XVectorTools.hpp" />
-    <ClInclude Include="Debug\include\Types\Types.hpp" />
-    <ClInclude Include="Debug\include\Types\XAlignedAllocator.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\ANNT.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Config.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\ICostFunction.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\XAbsoluteCost.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\XBinaryCrossEntropyCost.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\XCrossEntropyCost.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\XMSECost.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\CostFunctions\XNegativeLogLikelihoodCost.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\IActivationLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XEluActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XLeakyReLuActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XLogSoftMaxActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XReLuActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XSigmoidActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XSoftMaxActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Activations\XTanhActivation.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\ILayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\ITrainableLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\LayerIDs.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Processing\IProcessingLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Processing\XAveragePooling.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Processing\XBatchNormalization.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Processing\XDropOutLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\Processing\XMaxPooling.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\XConvolutionLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\XFullyConnectedLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\XGRULayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\XLSTMLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Layers\XRecurrentLayer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Network\XClassificationTrainingHelper.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Network\XNetworkContext.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Network\XNetworkInference.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Network\XNetworkTraining.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Network\XNeuralNetwork.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\INetworkOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XAdagradOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XAdamOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XGradientDescentOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XMomentumOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XNesterovMomentumOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Neuro\Optimizers\XRMSpropOptimizer.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\IVectorTools.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XAvxVectorTools.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XCpu.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XDataEncodingTools.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XParallel.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XSseVectorTools.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XVectorize.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Tools\XVectorTools.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Types\Types.hpp" />
+    <ClInclude Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\include\Types\XAlignedAllocator.hpp" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -214,7 +214,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Debug\lib\ANNT.lib" />
+    <Library Include="C:\Users\Nicola\Downloads\ANNT-dd29bd98a500a2859892265038f60b434577b704\ANNT-dd29bd98a500a2859892265038f60b434577b704\build\msvc\debug\lib\ANNT.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
