@@ -103,7 +103,7 @@ int train(int argc, char** argv) {
 
 	// create training context with Nesterov optimizer and Cross Entropy cost function
 	shared_ptr<XNetworkTraining> netTraining = make_shared<XNetworkTraining>(net,
-		make_shared<XAdamOptimizer>(0.1f),
+		make_shared<XGradientDescentOptimizer>(1.0f),
 		make_shared<XCrossEntropyCost>());
 
 	XClassificationTrainingHelper trainingHelper(netTraining, argc, argv);

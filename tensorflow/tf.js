@@ -25,13 +25,13 @@ function setupNewModel() {
   //config for layer
   const config_hidden_1 = {
     inputShape: [inputs],
-    activation: "relu",
+    activation: "sigmoid",
     units: 4
   }
 
   const config_hidden_2 = {
     units: 4,
-    activation: "relu"
+    activation: "sigmoid"
   }
 
   const config_output = {
@@ -61,8 +61,8 @@ function trainOnExistingModel() {
 
 function compileAndPredict(model) {
   //define an optimizer
-  const LEARNING_RATE = 1;
-  const optimize = tf.train.adam(LEARNING_RATE);
+  const LEARNING_RATE = 0.6;
+  const optimize = tf.train.sgd(LEARNING_RATE);
 
   //config for model
   const config = {
@@ -95,7 +95,7 @@ function compileAndPredict(model) {
       }
       console.log(no + "Expected: " + expected + ", predicted: " + pred);
     }
-    console.log("Predictions: " + predictions.length + ", correct: " + ok + ", wrong: " + (predictions.length - ok));
+    console.log("Predictions: " + predictions.length + ", correct: " + ok + ", wrong: " + (predictions.length - ok) + ", Accuracy: " + (ok / predictions.length) * 100);
     save(model)
   })
 }
@@ -143,7 +143,7 @@ function loadCSV() {
 function loadLocalCSV(identifier) {
   return new Promise((resolve, reject) => {
     var file, fr;
-    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv?ts=" + Date.now();
+    file = "https://raw.githubusercontent.com/nicorsm/ssd/master/dataset/" + identifier + ".csv";
     console.log(file);
     var xhr = new XMLHttpRequest();
     xhr.open("GET", file, true);

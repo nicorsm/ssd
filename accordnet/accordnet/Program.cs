@@ -91,14 +91,14 @@ namespace accordnet
             // Iterate until stop criteria is met
             double previous;
 
-            double[][] jaggedOutputs = train.outputs.ToArray(); // Jagged.OneHot(train.outputs.ToArray());
+            //double[][] jaggedOutputs = Jagged.OneHot(train.outputs.ToArray());
 
             // Heuristically randomize the network
             new NguyenWidrow(network).Randomize();
 
             // Create the learning algorithm
             var teacher = new LevenbergMarquardtLearning(network);
-            teacher.LearningRate = 0.0001;
+            teacher.LearningRate = 0.1;
 
             // Teach the network for 10 iterations:
             double error = Double.PositiveInfinity;
@@ -106,7 +106,7 @@ namespace accordnet
             do
             {
                 previous = error;
-                error = teacher.RunEpoch(train.inputs.ToArray(), jaggedOutputs);
+                error = teacher.RunEpoch(train.inputs.ToArray(), train.outputs.ToArray());
             } while (Math.Abs(previous - error) < 1e-10 * previous);
 
 
@@ -130,11 +130,14 @@ namespace accordnet
                     double threshold = expected * (0.25 / 2.0);
                     double lowerBound = expected - threshold;
                     double upperBound = expected + threshold;
-                    Console.WriteLine("Result [{0}][{1}], Expected: {2}, Predicted: {3}", i, k, expected, predicted);
                     
                     if(predicted >= lowerBound && predicted <= upperBound)
                     {
                         correct++;
+                        Console.WriteLine("Expected: {0}, Predicted: {1}", expected, predicted);
+                    } else
+                    {
+                        Console.WriteLine("<!>Expected: {0}, Predicted: {1}", expected, predicted);
                     }
                     items++;
                 }
@@ -149,8 +152,9 @@ namespace accordnet
 
                 //correct += expected == answer ? 1 : 0;
             }
-
-            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items", items, correct, items - correct);
+            var accuracy = (double)correct / (double)items;
+            var accuracy100 = accuracy * 100.0;
+            Console.WriteLine("Total: {0} items, Correct: {1} items, Wrong: {2} items - Accuracy {3}%", items, correct, items - correct, accuracy100.ToString("F2"));
             Serializer.Save(network, modelPath);
         }
     }
